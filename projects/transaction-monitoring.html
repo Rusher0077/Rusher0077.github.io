@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automated Transaction Monitoring Pipeline — Pallab Dey</title>
+  <meta name="description"
+    content="A Databricks SQL pipeline processing 6.3M mobile money transactions, evaluating explainable risk triggers and delivering automated Telegram alerts via n8n.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-main: #0c1017;
+      --card-bg: rgba(21, 28, 38, 0.55);
+      --card-bg-solid: #141b24;
+      --card-border: rgba(255, 255, 255, 0.08);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+
+      --accent-blue: #38bdf8;
+      --accent-blue-light: #7dd3fc;
+      --accent-cyan: #2dd4bf;
+
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 90% 50%, rgba(45, 212, 191, 0.04) 0%, transparent 45%);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      padding-top: 100px;
+    }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(12, 16, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      height: 70px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav .wrap-nav {
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav-brand span {
+      color: var(--accent-blue);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      color: var(--accent-blue);
+    }
+
+    .header-area {
+      margin-bottom: 40px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(56, 189, 248, 0.05);
+      color: var(--accent-blue-light);
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 24px;
+    }
+
+    .meta-row strong {
+      color: var(--text-secondary);
+    }
+
+    .visual-header {
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 32px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .visual-header img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .visual-header p {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin: 32px 0 16px;
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style-position: inside;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    li strong {
+      color: var(--text-primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 13.5px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-secondary);
+    }
+
+    th {
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    td strong {
+      color: var(--text-primary);
+    }
+
+    .code-block {
+      background: #07090e;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-blue-light);
+      overflow-x: auto;
+      margin: 24px 0;
+      white-space: pre;
+    }
+
+    .highlight-box {
+      background: rgba(45, 212, 191, 0.04);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 18px;
+      margin: 24px 0;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0;
+      color: var(--text-secondary);
+      font-size: 14.5px;
+    }
+
+    .highlight-box p strong {
+      color: var(--text-primary);
+    }
+
+    .highlight-box p+p {
+      margin-top: 12px;
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 0;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 80px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="wrap-nav">
+      <a href="../index.html" class="nav-brand">pallab<span>.</span>dey</a>
+      <a href="../index.html" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Home
+      </a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <header class="header-area">
+      <span class="tag">DATA PIPELINE CASE STUDY</span>
+      <h1>Automated Transaction Monitoring Pipeline</h1>
+      <div class="meta-row">
+        <span>Platform: <strong>Databricks</strong></span>
+        <span>Built with: <strong>SQL, PySpark, n8n</strong></span>
+        <span>Focus: <strong>KPI Monitoring, Risk Triggers, Automated Alerting</strong></span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Project Overview</h2>
+      <p>
+        A cloud-based pipeline that processes 6.3 million mobile money transactions in Databricks, computes daily
+        and weekly business KPIs, evaluates four explainable risk triggers using auditable business rules, and
+        delivers automated reports and alerts to Telegram on a cron schedule. Built to demonstrate cloud scale
+        data processing without requiring anyone to open a dashboard.
+      </p>
+      <p>
+        The dataset is <a href="https://www.kaggle.com/datasets/ealaxi/paysim1" target="_blank" rel="noopener"
+          style="color: var(--accent-blue-light);">PaySim</a>,
+        a synthetic mobile money dataset built from real aggregated transaction logs for fraud detection research. It
+        has
+        6.3M transactions across 31 simulated days, five transaction types, and ground-truth fraud labels.
+      </p>
+
+      <div class="highlight-box">
+        <p><strong>Note on Defensibility:</strong> This pipeline runs on a batch schedule, not streaming — a production
+          equivalent would use Kafka and Databricks Structured Streaming, and the architecture here is designed to be
+          compatible with that upgrade path. PaySim is synthetic, not live data: some patterns in the results below
+          (like a single-day 100% fraud spike) are dataset artifacts, not real-world events, and are labeled as such
+          rather than filtered out.</p>
+      </div>
+
+      <h2>Pipeline Architecture</h2>
+      <p>Four stages, moving from raw data to a delivered alert:</p>
+      <ul>
+        <li><strong>Ingestion (PySpark):</strong> A date offset is applied to the raw data, mapping the dataset's 31
+          simulated days onto a fixed window of real calendar dates so that cron-based triggers can query by actual
+          date,
+          treating each day as a live feed.</li>
+        <li><strong>Modeling (Databricks SQL):</strong> Data is built into a star schema —
+          <code>fact_daily_transactions</code> at the center, with <code>dim_date</code>, <code>dim_account</code>,
+          <code>dim_transaction_type</code>, and a rolling <code>account_balance_snapshot</code> tracking each account's
+          30-day activity baseline.
+        </li>
+        <li><strong>KPIs & risk triggers (Databricks SQL):</strong> Daily and weekly KPIs are computed, and four
+          rule based triggers are evaluated against the data (detailed below).</li>
+        <li><strong>Orchestration (n8n):</strong> Three cron-triggered workflows query the Databricks SQL endpoint
+          directly and deliver formatted alerts to Telegram.</li>
+      </ul>
+
+      <h2>Risk Triggers</h2>
+      <p>Four explainable, rule-based triggers, evaluated daily and written to an <code>alert_flags</code> table.
+        Results below are the actual validated outputs against PaySim:</p>
+      <table>
+        <tr>
+          <th>Trigger</th>
+          <th>Condition</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td><strong>Transaction spike</strong></td>
+          <td>Account exceeds 3× its own 30-day average transaction count in 24 hours</td>
+          <td>0 rows — PaySim's max daily count per account is 2, making the threshold mathematically unreachable. Kept
+            and documented as a dataset finding, not removed.</td>
+        </tr>
+        <tr>
+          <td><strong>Transfer → cash-out chain</strong></td>
+          <td>Same day transfer followed by a cash-out from the same account, in the top 5% of daily amounts</td>
+          <td>29 same day chains found; 1 exceeds ~$518K. Implemented as an explicit SQL rule, not a trained model, so
+            it stays fully auditable.</td>
+        </tr>
+        <tr>
+          <td><strong>Fraud rate breach</strong></td>
+          <td>Daily fraud rate exceeds 1%</td>
+          <td>Fires on 11 of 31 days. Day 31 shows a 100% fraud rate across 274 transactions — a simulation artifact,
+            kept and labeled rather than filtered.</td>
+        </tr>
+        <tr>
+          <td><strong>Volume collapse</strong></td>
+          <td>Daily volume drops more than 40% vs. the same day the prior week</td>
+          <td>Fires on ~10 of 31 days, reflecting genuine volume tapering in the dataset's second half.</td>
+        </tr>
+      </table>
+
+      <p>The transfer → cash-out chain trigger, implemented in SQL:</p>
+      <div class="code-block">-- Trigger: Transfer followed by same day cash-out from the same account,
+        -- where the amount sits in the top 5% of daily transaction amounts
+        SELECT
+        t1.account_id,
+        t1.transaction_date,
+        t1.amount AS transfer_amount,
+        t2.amount AS cashout_amount
+        FROM transactions t1
+        JOIN transactions t2
+        ON t1.account_id = t2.account_id
+        AND t1.transaction_date = t2.transaction_date
+        AND t1.type = 'TRANSFER'
+        AND t2.type = 'CASH_OUT'
+        WHERE t1.amount >= (
+        SELECT PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY amount)
+        FROM transactions
+        WHERE transaction_date = t1.transaction_date
+        );</div>
+
+      <div class="visual-header">
+        <img src="../assets/transaction_pipeline_horizontal.png"
+          alt="Transaction monitoring pipeline: PaySim data through PySpark ingestion, Databricks SQL modeling and triggers, to n8n and Telegram"
+          style="object-fit: contain;">
+        <p>PaySim data → ingestion → star schema → risk triggers → n8n → Telegram alerts</p>
+      </div>
+
+      <h2>Automated Workflows</h2>
+      <p>Three cron-triggered n8n workflows query the Databricks SQL endpoint and deliver formatted messages to
+        Telegram:</p>
+      <ul>
+        <li><strong>Daily KPI Monitor:</strong> Runs every morning, formats the previous day's KPIs with day-over-day
+          change indicators.</li>
+        <li><strong>Weekly Performance Summary:</strong> Runs every Monday, delivers a week-over-week summary including
+          transaction type mix and cash-out-to-cash-in ratio.</li>
+        <li><strong>Emergency Alert Engine:</strong> Runs daily and checks <code>alert_flags</code>. If nothing is
+          active it exits silently with no message sent; if a trigger is active, it sends a formatted alert naming the
+          specific trigger.</li>
+      </ul>
+
+      <h2>Key Design Decisions</h2>
+      <ul>
+        <li>The spike trigger compares each account against its <strong>own</strong> 30-day average rather than a fixed
+          company-wide cutoff — a power user making 50 transactions a day is normal; the same volume from an account
+          that averages 2 is not. This mirrors how fraud teams actually reason about behavioral deviation.</li>
+        <li>The transfer → cash-out chain is an explicit SQL condition, not a trained classifier — if it fires, every
+          account, amount, and timestamp is traceable without interpreting model weights.</li>
+        <li>Weekly volume is compared to the same day the prior week rather than the previous day, to avoid false alerts
+          from routine weekday patterns.</li>
+        <li>Findings that look like errors are kept and documented rather than filtered out: the zero-row spike trigger
+          and the day-31 100% fraud rate are both real characteristics of how PaySim generates data, not bugd. Hiding
+          them would misrepresent what the data actually shows.</li>
+      </ul>
+
+      <h2>Known Limitations</h2>
+      <ul>
+        <li>The pipeline runs on Batch schedule, not a streaming architecture. A production version would use Kafka and
+          Databricks Structured Streaming; this architecture is designed to be compatible with that upgrade.</li>
+        <li>n8n runs locally, so scheduled triggers only fire while the instance is active. A VPS or n8n Cloud
+          deployment would allow unattended 24/7 operation.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Pallab Dey</p>
+  </footer>
+
+</body>
+
+</html>

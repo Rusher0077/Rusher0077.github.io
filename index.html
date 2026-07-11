@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pallab Dey — Data Analyst</title>
+  <meta name="description"
+    content="Pallab Dey — Data Analyst. SQL, Power BI, Python. Portfolio of end-to-end data analysis and pipelines.">
+
+  <!-- Typography & Icons (Space Grotesk & Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-main: #0c1017;
+      --card-bg: rgba(21, 28, 38, 0.55);
+      --card-bg-solid: #141b24;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(56, 189, 248, 0.35);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+
+      --accent-blue: #38bdf8;
+      --accent-blue-light: #7dd3fc;
+      --accent-blue-glow: rgba(56, 189, 248, 0.15);
+      --accent-cyan: #2dd4bf;
+      --accent-cyan-light: #99f6e4;
+      --accent-cyan-glow: rgba(45, 212, 191, 0.12);
+
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 90% 50%, rgba(45, 212, 191, 0.04) 0%, transparent 45%);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Container Wrap */
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* NAVIGATION */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(12, 16, 23, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+    }
+
+    .nav-brand span {
+      color: var(--accent-blue);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      position: relative;
+      padding: 6px 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      transition: width 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 11px 22px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-secondary);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, #0284c7 100%);
+      border: none;
+      color: var(--bg-dark);
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(135deg, var(--accent-blue-light) 0%, var(--accent-blue) 100%);
+      box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.3);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      padding: 150px 0 90px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .badge-pulsing {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-cyan-glow);
+      border: 1px solid rgba(45, 212, 191, 0.2);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent-cyan-light);
+      font-weight: 500;
+    }
+
+    .badge-pulsing .dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-cyan);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.5);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(45, 212, 191, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(45, 212, 191, 0);
+      }
+    }
+
+    .hero-left h1 {
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      color: var(--text-primary);
+    }
+
+    .hero-left h1 span {
+      background: linear-gradient(135deg, var(--accent-blue-light) 0%, var(--accent-cyan-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-left p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 58ch;
+      line-height: 1.7;
+    }
+
+    .hero-left p strong {
+      color: var(--text-primary);
+    }
+
+    .hero-meta-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .meta-chip {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      padding: 8px 14px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .meta-chip strong {
+      color: var(--text-primary);
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    /* Right Side - Visual Photo Card */
+    .hero-right {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .photo-container {
+      position: relative;
+      width: 310px;
+      z-index: 10;
+    }
+
+    /* Glow backdrop behind photo - low opacity Nord Ice Blue glow */
+    .photo-glow {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      border-radius: 12px;
+      filter: blur(16px);
+      opacity: 0.15;
+      z-index: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .photo-container:hover .photo-glow {
+      opacity: 0.25;
+    }
+
+    .photo-frame {
+      position: relative;
+      width: 100%;
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 2;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.3s ease, transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .photo-container:hover .photo-frame {
+      border-color: var(--accent-blue);
+      transform: translateY(-4px);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 290px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--card-border);
+      filter: grayscale(10%) contrast(100%);
+      transition: filter 0.3s ease;
+    }
+
+    .photo-caption {
+      background: rgba(12, 16, 23, 0.7);
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .photo-caption span {
+      color: var(--accent-blue);
+    }
+
+    /* Decorative grid elements floating */
+    .floating-grid {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 10px 10px;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* SECTION HEADINGS */
+    section {
+      padding: 90px 0;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .section-head {
+      margin-bottom: 48px;
+    }
+
+    .section-head .tagline {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .section-head h2 {
+      font-family: var(--font-heading);
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      display: inline-block;
+      position: relative;
+    }
+
+    .section-head h2::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 32px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 2px;
+    }
+
+    /* ABOUT SECTION & TRUST GRID */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .about-bio {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .about-bio p strong {
+      color: var(--text-primary);
+    }
+
+    .trust-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .trust-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .trust-card:hover {
+      background: rgba(21, 28, 38, 0.8);
+      border-color: var(--card-hover-border);
+      transform: translateY(-2px);
+    }
+
+    .trust-card .icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-blue);
+      margin-bottom: 8px;
+    }
+
+    .trust-card:nth-child(2n) .icon-wrap {
+      background: rgba(45, 212, 191, 0.06);
+      color: var(--accent-cyan);
+    }
+
+    .trust-card .num {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .trust-card .title {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .trust-card .desc {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* PROJECTS GRID & SLIDER */
+    .project-slider-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .project-grid {
+      display: flex;
+      gap: 30px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      /* Firefox */
+      padding: 10px 0 20px 0;
+    }
+
+    .project-grid::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+
+    .project-card {
+      flex: 0 0 360px;
+      /* fixed size so last card peeks on desktop */
+      scroll-snap-align: start;
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
+      color: inherit;
+    }
+
+    @media (max-width: 1024px) {
+      .project-card {
+        flex: 0 0 310px;
+        /* still crops slightly on medium screens */
+      }
+    }
+
+    @media (max-width: 768px) {
+      .project-card {
+        flex: 0 0 85%;
+        /* 85% width so the next card peeks on mobile */
+      }
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(12, 16, 23, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--accent-blue);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .slider-btn.prev {
+      left: -24px;
+    }
+
+    .slider-btn.next {
+      right: -24px;
+    }
+
+    /* Desktop hover visibility controls */
+    @media (hover: hover) {
+      .slider-btn {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .project-slider-wrapper:hover .slider-btn:not(.disabled) {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    /* Always visible on mobile devices */
+    @media (max-width: 768px) {
+      .slider-btn {
+        opacity: 1;
+        visibility: visible;
+        width: 44px;
+        height: 44px;
+      }
+
+      .slider-btn.prev {
+        left: -10px;
+      }
+
+      .slider-btn.next {
+        right: -10px;
+      }
+    }
+
+    .slider-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue-light);
+      background: rgba(56, 189, 248, 0.15);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .slider-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .slider-btn.disabled {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none;
+    }
+
+    /* Dots indicator styling */
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .slider-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .slider-dot.active {
+      background: var(--accent-blue);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    .project-card:hover {
+      border-color: var(--card-hover-border);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -20px rgba(56, 189, 248, 0.15);
+    }
+
+    /* Thumbnail Panel using inline SVG mockup */
+    .project-visual {
+      height: 180px;
+      background: #090d14;
+      border-bottom: 1px solid var(--card-border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 0;
+    }
+
+    .project-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      object-position: center;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .project-card:hover .project-visual img {
+      transform: scale(1.05);
+    }
+
+    .project-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 12px;
+    }
+
+    .project-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .project-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.05);
+      color: var(--accent-blue-light);
+      border: 1px solid rgba(56, 189, 248, 0.12);
+    }
+
+    .project-card:nth-child(2) .project-tag,
+    .project-card:nth-child(3) .project-tag {
+      background: rgba(45, 212, 191, 0.04);
+      color: var(--accent-cyan);
+      border-color: rgba(45, 212, 191, 0.12);
+    }
+
+    .project-body h3 {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .project-body p {
+      font-size: 14.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    /* Key metrics bullet section inside card */
+    .project-metrics {
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 14px;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .project-metric-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+
+    .project-metric-item svg {
+      color: var(--accent-cyan);
+      flex-shrink: 0;
+    }
+
+    .project-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-heading);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-top: 8px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .project-action:hover {
+      color: var(--accent-blue-light);
+    }
+
+    .project-card:hover .project-action svg {
+      transform: translateX(4px);
+    }
+
+    /* SKILLS SECTION */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .skills-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+
+    .skills-card:hover {
+      border-color: var(--card-hover-border);
+      background: rgba(21, 28, 38, 0.7);
+    }
+
+    .skills-card h3 {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .skills-card h3 svg {
+      color: var(--accent-blue);
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-badge {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .skill-badge:hover {
+      color: var(--text-primary);
+      background: rgba(56, 189, 248, 0.08);
+      border-color: var(--accent-blue);
+      transform: scale(1.02);
+    }
+
+    .skill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill-icon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+
+    /* Fix dark icons on dark background */
+    .skill-icon.icon-invert {
+      filter: invert(1) brightness(0.85);
+    }
+
+    .skill-icon.icon-bright {
+      filter: brightness(1.5) saturate(1.2);
+    }
+
+    /* GitHub link on project cards */
+    .project-github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      margin-top: 10px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .project-github-link:hover {
+      color: var(--accent-blue);
+      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    /* CERTIFICATIONS SECTION */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .cert-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s ease;
+    }
+
+    .cert-card:hover {
+      border-color: var(--card-hover-border);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px -10px rgba(56, 189, 248, 0.15);
+    }
+
+    .cert-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: var(--card-bg-solid);
+    }
+
+    .cert-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+
+    .cert-card:hover .cert-thumb img {
+      transform: scale(1.04);
+    }
+
+    .cert-body {
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cert-issuer {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-blue);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .cert-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    .cert-verify {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+
+    .cert-card:hover .cert-verify {
+      color: var(--accent-cyan);
+    }
+
+    /* CONTACT SECTION */
+    .contact-box {
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+    }
+
+    .contact-box h3 {
+      font-family: var(--font-heading);
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .contact-box p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 55ch;
+      line-height: 1.7;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--card-border);
+      background: #090c12;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    footer .nav-brand {
+      font-size: 16px;
+    }
+
+    /* RESPONSIVENESS */
+    @media (max-width: 868px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+      }
+
+      .hero-left {
+        align-items: center;
+      }
+
+      .badge-pulsing {
+        align-self: center;
+      }
+
+      .hero-left p {
+        margin: 0 auto;
+      }
+
+      .hero-meta-chips {
+        justify-content: center;
+      }
+
+      .hero-links {
+        justify-content: center;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .contact-box {
+        padding: 32px 20px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-left h1 {
+        font-size: 36px;
+      }
+
+      .section-head h2 {
+        font-size: 28px;
+      }
+
+      .trust-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      footer .wrap {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="wrap">
+      <a href="#" class="nav-brand">
+        Pallab<span> </span>Dey
+      </a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <!-- Left details -->
+        <div class="hero-left">
+          <div class="badge-pulsing">
+            <span class="dot"></span>
+            Available for Roles
+          </div>
+          <h1>Helping Businesses Make Smarter Decisions with <span>Data.</span></h1>
+          <p>
+            I'm a <strong>SQL-first analyst</strong> with a computer science background. I enjoy turning raw data into
+            dashboards people actually use, and I care more about writing code I can explain than code that just works.
+          </p>
+
+          <div class="hero-meta-chips">
+            <div class="meta-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                <path d="M6 6h10M6 10h10" />
+              </svg>
+              <span>B.Sc. CS — <strong>CGPA 3.97/4.00</strong></span>
+            </div>
+            <div class="meta-chip">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                <path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5" />
+                <path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3" />
+              </svg>
+              <span><strong>100+ SQL</strong> Problems Solved</span>
+            </div>
+            <div class="meta-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              </svg>
+              <span>Databricks & DataCamp Certified</span>
+            </div>
+          </div>
+
+          <div class="hero-links">
+            <a href="#projects" class="btn primary">
+              Explore Projects
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <a href="Pallab_Dey_Resume.pdf" target="_blank" rel="noopener" class="btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download Resume
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Visual Photo Card -->
+        <div class="hero-right">
+          <div class="floating-grid"></div>
+          <div class="photo-container">
+            <div class="photo-glow"></div>
+            <div class="photo-frame">
+              <img src="Professional%20Image.png" alt="Pallab Dey Portrait">
+              <div class="photo-caption">
+                SELECT * FROM analysts WHERE name = <span>'Pallab Dey'</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT SECTION -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tagline">Behind the Data</span>
+        <h2>About Me</h2>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-bio">
+          <p>
+            I got into this by taking messy, half broken datasets and turning them into something a business could
+            actually act on. Along the way I started automating the boring parts too, things like triggering ingestion
+            jobs or sending out alerts, because running the same steps by hand every day felt like a waste of time. </p>
+          <p>
+            I care more about being able to explain my work than making it look polished. If something is on my resume
+            or in a project writeup, I can walk you through how I got there, the code behind it and where it falls
+            short.
+          </p>
+          <p>
+            The part I keep coming back to is <strong>automation</strong>. I don't just want to analyze data, I want to
+            build workflows that do the repetitive work for me, from ingest triggers to alert pipelines. I think
+            analysts who understand this side of things end up being more useful.
+          </p>
+        </div>
+
+        <div class="trust-card-grid">
+          <div class="trust-card">
+            <div class="icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+              </svg>
+            </div>
+            <div class="num">3.97</div>
+            <div class="title">B.Sc. in CS CGPA</div>
+            <div class="desc">Metropolitan University, Sylhet. Grounded in SQL & Data Structures.</div>
+          </div>
+
+          <div class="trust-card">
+            <div class="icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div class="num">100+</div>
+            <div class="title">SQL Problems</div>
+            <div class="desc">Solved across StrataScratch, DataLemur, and HackerRank.</div>
+          </div>
+
+          <div class="trust-card">
+            <div class="icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+            </div>
+            <div class="num">04</div>
+            <div class="title">Certifications</div>
+            <div class="desc">DataCamp, Databricks, Coursera &amp; Government-accredited credentials.</div>
+          </div>
+
+          <div class="trust-card">
+            <div class="icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              </svg>
+            </div>
+            <div class="num">Automation</div>
+            <div class="title">First</div>
+            <div class="desc">Embedding automation into every workflow—not a traditional analyst mindset.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS SECTION -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tagline">Realized Work</span>
+        <h2>Featured Projects</h2>
+      </div>
+
+      <div class="project-slider-wrapper">
+        <button class="slider-btn prev" id="slider-prev" aria-label="Previous Project">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="project-grid">
+
+          <!-- Project 1: Maven Toys -->
+          <div class="project-card" id="project-maven-toys">
+            <div class="project-visual">
+              <img src="assets/Maven_Dashboard.png" alt="Maven Toys Sales Dashboard Analysis">
+            </div>
+            <div class="project-body">
+              <div class="project-tags">
+                <span class="project-tag">SQL</span>
+                <span class="project-tag">Power BI</span>
+                <span class="project-tag">Analysis</span>
+              </div>
+              <h3>Maven Toys Sales Analysis</h3>
+              <p>
+                An end-to-end analysis of ~829K toy transaction rows. Features an interactive dashboard and business
+                report diving deep into monthly trends and category shares.
+              </p>
+              <div class="project-metrics">
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Cleaned 6 relational tables via SQL queries</span>
+                </div>
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>5-page structured interactive Power BI report</span>
+                </div>
+              </div>
+              <a href="projects/maven-toys.html" class="project-action">
+                View Case Study
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s;">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="https://github.com/Rusher0077/Maven-Toys-Analysis" target="_blank" rel="noopener"
+                class="project-github-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+
+          <!-- Project 2: Transaction Monitoring -->
+          <div class="project-card">
+            <div class="project-visual">
+              <img src="assets/transaction_pipeline_horizontal.png" alt="Transaction Monitoring Pipeline Flow"
+                style="object-fit: contain;">
+            </div>
+            <div class="project-body">
+              <div class="project-tags">
+                <span class="project-tag">SQL</span>
+                <span class="project-tag">Databricks</span>
+
+                <span class="project-tag">Automation</span>
+              </div>
+              <h3>Transaction Monitoring Pipeline</h3>
+              <p>
+                An automated data processing pipeline engineered to flag suspicious transactional activity. Built using
+                Databricks to clean and query anomalous behavior.
+              </p>
+              <div class="project-metrics">
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Four explainable risk triggers built in Databricks SQL</span>
+                </div>
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Automated Telegram alerts via n8n</span>
+                </div>
+              </div>
+              <a href="projects/transaction-monitoring.html" class="project-action">
+                View Case Study
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s;">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="https://github.com/Rusher0077/Automated-Transaction-Monitoring-Pipeline" target="_blank"
+                rel="noopener" class="project-github-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+
+          <!-- Project 3: RAG Chatbot -->
+          <div class="project-card">
+            <div class="project-visual">
+              <img src="assets/RAG_Workflow.png" alt="RAG Pipeline AI Chatbot n8n Workflow">
+            </div>
+            <div class="project-body">
+              <div class="project-tags">
+                <span class="project-tag">n8n</span>
+                <span class="project-tag">Pinecone DB</span>
+                <span class="project-tag">Gemini API</span>
+              </div>
+              <h3>RAG Pipeline AI Chatbot</h3>
+              <p>
+                An intelligent chatbot named Nova engineered entirely in n8n. Interfaces Gemini LLMs and Pinecone vector
+                indexes for context-rich data answering.
+              </p>
+              <div class="project-metrics">
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Live knowledge base updates </span>
+                </div>
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Dual-trigger setup for vector database uploads</span>
+                </div>
+              </div>
+              <a href="projects/rag-chatbot.html" class="project-action">
+                View Case Study
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s;">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="https://github.com/Rusher0077/RAG-Pipeline-AI-Chatbot" target="_blank" rel="noopener"
+                class="project-github-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+
+          <!-- Project 4: Pizza Sales Analysis -->
+          <div class="project-card">
+            <div class="project-visual">
+              <img src="assets/pizza_dashboard.png" alt="Pizza Sales Analysis Dashboard">
+            </div>
+            <div class="project-body">
+              <div class="project-tags">
+                <span class="project-tag">SQL</span>
+                <span class="project-tag">Power BI</span>
+                <span class="project-tag">Analysis</span>
+              </div>
+              <h3>Pizza Sales Analysis</h3>
+              <p>
+                An end-to-end sales analysis project investigating key business metrics like KPI trends, hourly peak
+                times, and sales distribution. Built with SQL and interactive Power BI.
+              </p>
+              <div class="project-metrics">
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Cleaned and prepared transaction data with SQL queries</span>
+                </div>
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>Interactive Excel dashboard for business insights</span>
+                </div>
+              </div>
+              <a href="projects/pizza-sales.html" class="project-action">
+                View Case Study
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s;">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="https://github.com/Rusher0077/Pizza-Sales-Analysis" target="_blank" rel="noopener"
+                class="project-github-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                </svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+
+        </div>
+        <button class="slider-btn next" id="slider-next" aria-label="Next Project">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+      <div class="slider-dots" id="slider-dots"></div>
+    </div>
+  </section>
+
+  <!-- SKILLS SECTION -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tagline">Capabilities</span>
+        <h2>My Skill Stack</h2>
+      </div>
+
+      <div class="skills-grid">
+        <!-- Core -->
+        <div class="skills-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3" />
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+              <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
+            </svg>
+            Core Analysis
+          </h3>
+          <div class="skills-list">
+            <span class="skill-badge"><img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" class="skill-icon"
+                alt="">SQL</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 3H3v18h18V3z" fill="#F2C811" />
+                <path d="M10.5 7.5L7 12l3.5 4.5h2L9 12l3.5-4.5h-2zm3 0L17 12l-3.5 4.5h2L19 12l-3.5-4.5h-2z"
+                  fill="#000" />
+              </svg>Power BI</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              </svg>Data Cleaning</span>
+            <span class="skill-badge"><img src="https://img.icons8.com/color/48/microsoft-excel-2019--v1.png"
+                class="skill-icon" alt="">Excel</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <path d="M3 17l4 4 6-10" />
+              </svg>Data Modelling</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M3 3h18v18H3z" />
+                <path d="M9 9h6M9 12h6M9 15h4" />
+              </svg>DAX</span>
+          </div>
+        </div>
+
+        <!-- Tools & Platforms -->
+        <div class="skills-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+              <line x1="6" y1="6" x2="6.01" y2="6" />
+              <line x1="6" y1="18" x2="6.01" y2="18" />
+            </svg>
+            Tools &amp; Platforms
+          </h3>
+          <div class="skills-list">
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" fill="#FF3621" />
+                <path d="M2 17l10 5 10-5" stroke="#FF3621" stroke-width="2" fill="none" />
+                <path d="M2 12l10 5 10-5" stroke="#FF3621" stroke-width="2" fill="none" />
+              </svg>Databricks</span>
+            <span class="skill-badge"><img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="skill-icon"
+                alt="">Python</span>
+            <span class="skill-badge"><img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" class="skill-icon"
+                alt="">NumPy</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 4h4v16H2V4zm6 4h4v12H8V8zm6-6h4v18h-4V2zm6 8h4v10h-4V10z" fill="#150458" />
+                <path d="M2 4h4v16H2V4zm6 4h4v12H8V8zm6-6h4v18h-4V2zm6 8h4v10h-4V10z" fill="#E70488" opacity="0.5" />
+              </svg>Pandas</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="4" fill="#EA4B71" />
+                <path d="M7 8h10M7 12h6M7 16h8" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+              </svg>n8n Flows</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="#f0f0f0"
+                stroke-width="2">
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </svg>Git &amp; GitHub</span>
+            <span class="skill-badge"><img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" class="skill-icon"
+                alt="">Docker</span>
+          </div>
+        </div>
+
+        <!-- Growing -->
+        <div class="skills-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m18 16 4-4-4-4" />
+              <path d="m6 8-4 4 4 4" />
+              <path d="m14.5 4-5 16" />
+            </svg>
+            Growing Technologies
+          </h3>
+          <div class="skills-list">
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>RAG</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
+              </svg>Pinecone</span>
+            <span class="skill-badge"><svg class="skill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" />
+                <path d="m8 12 3 3 5-5" />
+              </svg>LLMs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS SECTION -->
+  <section id="certifications">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tagline">Credentials</span>
+        <h2>Certifications</h2>
+      </div>
+
+      <div class="cert-grid">
+
+        <!-- DataCamp Data Analyst Associate -->
+        <a class="cert-card" href="https://www.datacamp.com/certificate/DAA0017933960446" target="_blank"
+          rel="noopener">
+          <div class="cert-thumb">
+            <img src="certifications/data_analyst_associate.png" alt="DataCamp Data Analyst Associate Certificate">
+          </div>
+          <div class="cert-body">
+            <span class="cert-issuer">DataCamp</span>
+            <h4 class="cert-title">Data Analyst Associate</h4>
+            <span class="cert-verify">Verify Credential
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- DataCamp Data Analyst in Databricks -->
+        <a class="cert-card"
+          href="https://www.datacamp.com/completed/statement-of-accomplishment/track/5ead819e7f0a7e63e029301e3f551ac092b3868b"
+          target="_blank" rel="noopener">
+          <div class="cert-thumb">
+            <img src="certifications/data_analyst_in_databricks.jfif"
+              alt="DataCamp Data Analyst in Databricks Certificate">
+          </div>
+          <div class="cert-body">
+            <span class="cert-issuer">DataCamp</span>
+            <h4 class="cert-title">Data Analyst in Databricks</h4>
+            <span class="cert-verify">Verify Credential
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- Python Programming and Basic Data Science -->
+        <a class="cert-card" href="https://training.edge.gov.bd/certificate-validation" target="_blank" rel="noopener">
+          <div class="cert-thumb">
+            <img src="certifications/Python Programming and Basic Data Science.jfif"
+              alt="Python Programming and Basic Data Science Certificate">
+          </div>
+          <div class="cert-body">
+            <span class="cert-issuer">Government of Bangladesh</span>
+            <h4 class="cert-title">Python Programming &amp; Basic Data Science</h4>
+            <span class="cert-verify">Verify Credential
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- Supervised Machine Learning: Regression and Classification -->
+        <a class="cert-card" href="https://www.coursera.org/account/accomplishments/verify/4C5EZYK9WSXJ" target="_blank"
+          rel="noopener">
+          <div class="cert-thumb">
+            <img src="certifications/Supervised Machine Learning - Regression and Classification.jfif"
+              alt="Supervised Machine Learning Certificate">
+          </div>
+          <div class="cert-body">
+            <span class="cert-issuer">Coursera / Stanford</span>
+            <h4 class="cert-title">Supervised Machine Learning: Regression &amp; Classification</h4>
+            <span class="cert-verify">Verify Credential
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="contact-box">
+        <span style="font-family: var(--font-mono); font-size: 13px; color: var(--accent-blue);">Reach Out</span>
+        <h3>Let's collaborate on data.</h3>
+        <p>
+          I am actively seeking Data Analyst positions or BI dashboard-focused contract roles. If you have an
+          interesting data pipeline problem or simply want to connect, feel free to reach out.
+        </p>
+
+        <div class="contact-links">
+          <a href="mailto:pallab@pallabdey.com" class="btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            pallab@pallabdey.com
+          </a>
+          <a href="https://linkedin.com/in/pallabdey007" target="_blank" rel="noopener" class="btn primary">
+            Connect on LinkedIn
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+          <a href="https://github.com/Rusher0077" target="_blank" rel="noopener" class="btn">
+            Follow on GitHub
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="nav-brand">
+        Pallab<span> </span>Dey
+      </div>
+      <span>Copyright &copy; 2026 Pallab Dey. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.querySelector('.project-grid');
+      const prevBtn = document.getElementById('slider-prev');
+      const nextBtn = document.getElementById('slider-next');
+      const dotsContainer = document.getElementById('slider-dots');
+
+      if (grid && prevBtn && nextBtn && dotsContainer) {
+        const cards = grid.querySelectorAll('.project-card');
+
+        let dots = [];
+
+        // Create dots based on visible "pages"
+        const createDots = () => {
+          dotsContainer.innerHTML = '';
+          dots = [];
+
+          if (cards.length === 0) return;
+
+          const containerWidth = grid.clientWidth;
+          const cardWidth = cards[0].offsetWidth + 30; // card + gap
+          const visibleCount = Math.max(1, Math.floor(containerWidth / cardWidth));
+
+          // Number of dots = total cards - visible + 1 (standard carousel logic)
+          const numDots = Math.max(1, cards.length - visibleCount + 1);
+
+          for (let i = 0; i < numDots; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('slider-dot');
+            if (i === 0) dot.classList.add('active');
+
+            dot.addEventListener('click', () => {
+              const targetIndex = Math.min(i, cards.length - 1);
+              const targetCard = cards[targetIndex];
+              grid.scrollTo({
+                left: targetCard.offsetLeft - grid.offsetLeft,
+                behavior: 'smooth'
+              });
+            });
+
+            dotsContainer.appendChild(dot);
+            dots.push(dot);
+          }
+        };
+
+        const updateActiveDot = () => {
+          const scrollLeft = grid.scrollLeft;
+          const maxScrollLeft = grid.scrollWidth - grid.clientWidth;
+
+          let activeIndex = 0;
+          let minDiff = Infinity;
+
+          cards.forEach((card, index) => {
+            const diff = Math.abs((card.offsetLeft - grid.offsetLeft) - scrollLeft);
+            if (diff < minDiff) {
+              minDiff = diff;
+              activeIndex = index;
+            }
+          });
+
+          // Force last dot at the end
+          if (scrollLeft >= maxScrollLeft - 40) {
+            activeIndex = cards.length - 1;
+          }
+
+          // Map card index → dot index (for cases where multiple cards are visible)
+          const containerWidth = grid.clientWidth;
+          const cardWidth = cards[0].offsetWidth + 30;
+          const visibleCount = Math.max(1, Math.floor(containerWidth / cardWidth));
+          const dotIndex = Math.min(Math.floor(activeIndex / Math.max(1, visibleCount - 1)), dots.length - 1);
+
+          dots.forEach((dot, index) => {
+            if (index === dotIndex) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        };
+
+        const updateButtons = () => {
+          const scrollLeft = grid.scrollLeft;
+          const maxScrollLeft = grid.scrollWidth - grid.clientWidth;
+
+          prevBtn.classList.toggle('disabled', scrollLeft <= 5);
+          nextBtn.classList.toggle('disabled', scrollLeft >= maxScrollLeft - 5);
+        };
+
+        // Navigation
+        prevBtn.addEventListener('click', () => {
+          const cardWidth = (cards[0]?.offsetWidth || 360) + 30;
+          grid.scrollBy({ left: -cardWidth * 1.2, behavior: 'smooth' }); // scroll by ~1.2 cards
+        });
+
+        nextBtn.addEventListener('click', () => {
+          const cardWidth = (cards[0]?.offsetWidth || 360) + 30;
+          grid.scrollBy({ left: cardWidth * 1.2, behavior: 'smooth' });
+        });
+
+        // Event listeners
+        grid.addEventListener('scroll', () => {
+          updateButtons();
+          updateActiveDot();
+        });
+
+        window.addEventListener('resize', () => {
+          createDots();        // Recreate dots on resize
+          updateButtons();
+          updateActiveDot();
+        });
+
+        // Initial setup
+        createDots();
+        setTimeout(() => {
+          updateButtons();
+          updateActiveDot();
+        }, 150);
+      }
+    });
+  </script>
+</body>
+
+</html>

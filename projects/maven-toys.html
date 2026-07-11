@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maven Toys Sales Analysis — Pallab Dey</title>
+  <meta name="description" content="Detailed analysis of Maven Toys sales using SQL and Power BI dashboard.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-main: #0c1017;
+      --card-bg: rgba(21, 28, 38, 0.55);
+      --card-bg-solid: #141b24;
+      --card-border: rgba(255, 255, 255, 0.08);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+
+      --accent-blue: #38bdf8;
+      --accent-blue-light: #7dd3fc;
+      --accent-cyan: #2dd4bf;
+
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 90% 50%, rgba(45, 212, 191, 0.04) 0%, transparent 45%);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      padding-top: 100px;
+    }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(12, 16, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      height: 70px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav .wrap-nav {
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav-brand span {
+      color: var(--accent-blue);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      color: var(--accent-blue);
+    }
+
+    .header-area {
+      margin-bottom: 40px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(56, 189, 248, 0.05);
+      color: var(--accent-blue-light);
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 24px;
+    }
+
+    .meta-row strong {
+      color: var(--text-secondary);
+    }
+
+    .visual-header {
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0;
+      margin: 32px 0;
+      overflow: hidden;
+    }
+
+    .visual-header img {
+      width: 100%;
+      display: block;
+      border-radius: 0;
+    }
+
+    .visual-header p {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      padding: 10px 16px;
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin: 32px 0 16px;
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style-position: inside;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    li strong {
+      color: var(--text-primary);
+    }
+
+    .code-block {
+      background: #07090e;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-blue-light);
+      overflow-x: auto;
+      margin: 24px 0;
+      white-space: pre;
+    }
+
+    .highlight-box {
+      background: rgba(45, 212, 191, 0.04);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 18px;
+      margin: 24px 0;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0;
+      color: var(--text-secondary);
+      font-size: 14.5px;
+    }
+
+    .highlight-box p strong {
+      color: var(--text-primary);
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 0;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 80px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="wrap-nav">
+      <a href="../index.html" class="nav-brand">pallab<span>.</span>dey</a>
+      <a href="../index.html" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Home
+      </a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <header class="header-area">
+      <span class="tag">SQL & POWER BI CASE STUDY</span>
+      <h1>Maven Toys Sales Analysis</h1>
+      <div class="meta-row">
+        <span>Dataset: <strong>~829K transactions / 6 tables</strong></span>
+        <span>Tools: <strong>SQL Server, Power BI</strong></span>
+        <span>Role: <strong>Data Analyst</strong></span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Project Overview</h2>
+      <p>
+        The goal of this project was to analyze commercial performance across multiple toy retail outlets,
+        identifying growth opportunities, high-performing product categories, and margin pressure points. Using
+        SQL Server for relational data modeling and Power BI for reporting, I built a 5-page interactive dashboard.
+      </p>
+
+      <div class="highlight-box">
+        <p><strong>Note on Defensibility:</strong> Rather than just reporting aggregate metrics, I integrated
+          external research on retail seasonality to explain the <em>why</em> behind sales trends, validating
+          claims with data rather than assumptions.</p>
+      </div>
+
+      <h2>Data Pipeline & Prep (SQL)</h2>
+      <p>
+        The source data consisted of six relational CSV tables (Sales, Products, Stores, Inventory, and Calendar).
+        The initial cleaning phase required handling mismatched formats, sorting store locations, and validating
+        primary-foreign key integrity.
+      </p>
+      <p>
+        Key steps executed in SQL:
+      </p>
+      <ul>
+        <li><strong>Standardized</strong> currency values into uniform decimals.</li>
+        <li><strong>Handled null values</strong> in transaction fields without skewing monthly averages.</li>
+        <li><strong>Constructed</strong> rolling sales metrics and year-over-year revenue aggregations.</li>
+      </ul>
+
+      <div class="code-block">-- SQL Query: Monthly Year-Over-Year Revenue Analysis
+        SELECT
+        DATEPART(year, s.Date) AS SalesYear,
+        DATEPART(month, s.Date) AS SalesMonth,
+        SUM(s.Units * p.Product_Price) AS TotalRevenue,
+        LAG(SUM(s.Units * p.Product_Price), 12) OVER (
+        ORDER BY DATEPART(year, s.Date), DATEPART(month, s.Date)
+        ) AS PrevYearRevenue
+        FROM Sales s
+        JOIN Products p ON s.Product_ID = p.Product_ID
+        GROUP BY DATEPART(year, s.Date), DATEPART(month, s.Date);</div>
+
+      <h2>Power BI Dashboard Architecture</h2>
+      <p>
+        The interactive report contains five dedicated dashboards that analyze the data from different business
+        angles:
+      </p>
+      <ul>
+        <li><strong>KPI Scorecards:</strong> Visual summaries tracking total revenue ($14M), units sold (~1M), and
+          gross margin (26.2%, down from 29.3% the prior year despite 30.9% revenue growth).</li>
+        <li><strong>Sales Trend:</strong> A breakdown showing sales peaks during seasonal holidays, including a
+          spike around Día del Niño.</li>
+        <li><strong>Product Category Performance:</strong> <em>Toys</em> drives the highest revenue volume but
+          carries the lowest margin (21.2%), while <em>Electronics</em> is the highest-margin category (44.6%).
+          Colorbuds stands out as a top-performing high-margin product.</li>
+        <li><strong>Store Performance Grid:</strong> Location-based ranking showing airport-format stores
+          outperforming on margin relative to other store formats.</li>
+        <li><strong>Inventory Forecast:</strong> Outlining store locations containing high stock volumes of
+          low-turnover items.</li>
+      </ul>
+
+      <div class="visual-header">
+
+        <img src="../assets/maven-toys-dashboard.gif"
+          alt="Maven Toys Power BI dashboard — walkthrough of KPI scorecards and sales trend pages">
+
+      </div>
+
+      <h2>Key Insights & Business Outcomes</h2>
+      <p>
+        Revenue grew 30.9% year over year, but margin dropped from 29.3% to 26.2% over the same period. So growth came
+        at a cost.
+
+        The category breakdown shows why. Toys is the top revenue category, but it's also the lowest-margin one.
+        Meanwhile, higher-margin categories like Electronics grew much slower.
+      </p>
+      <ul>
+        <li><strong>Finding:</strong> Store format matters as much as location. Airport-format stores post stronger
+          margins than other formats, regardless of city.
+        </li>
+        <li><strong>Implication:</strong> When low-margin categories drive most of the revenue growth, the margin base
+          can quietly shrink underneath it. That's easy to miss if you're only tracking top-line revenue.</li>
+      </ul>
+
+      <div class="project-links"
+        style="margin-top: 40px; padding: 24px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--card-border); border-radius: 8px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-weight: 600; color: var(--text-primary); min-width: 180px;">Live Dashboard Link:</span>
+          <a href="https://app.fabric.microsoft.com/view?r=eyJrIjoiM2EwNjBjZjQtMmIwOS00OTk1LWFiYzgtNjZmZDA3NDRkNTg4IiwidCI6IjlhMjdkMTllLTQ0MjEtNDRmYi1hY2Q4LWZkNTZjOWZiYTJkOCIsImMiOjEwfQ%3D%3D&pageName=79ba1eb3622c4e094ba8"
+            target="_blank" rel="noopener"
+            style="color: var(--accent-blue); text-decoration: underline; font-weight: 500; word-break: break-all; transition: color 0.2s;">
+            Interactive Power BI Dashboard
+          </a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-weight: 600; color: var(--text-primary); min-width: 180px;">Read The Full Business Report
+            Here:</span>
+          <a href="https://github.com/Rusher0077/Automated-Transaction-Monitoring-Pipeline" target="_blank"
+            rel="noopener"
+            style="color: var(--accent-blue); text-decoration: underline; font-weight: 500; word-break: break-all; transition: color 0.2s;">
+            View PDF
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Pallab Dey</p>
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Pipeline AI Chatbot — Pallab Dey</title>
+  <meta name="description"
+    content="A retrieval-augmented chatbot built entirely in n8n, watching a Google Drive folder and answering questions grounded strictly in its knowledge base.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-main: #0c1017;
+      --card-bg: rgba(21, 28, 38, 0.55);
+      --card-bg-solid: #141b24;
+      --card-border: rgba(255, 255, 255, 0.08);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+
+      --accent-blue: #38bdf8;
+      --accent-blue-light: #7dd3fc;
+      --accent-cyan: #2dd4bf;
+
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image:
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 90% 50%, rgba(45, 212, 191, 0.04) 0%, transparent 45%);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      padding-top: 100px;
+    }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(12, 16, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      height: 70px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav .wrap-nav {
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav-brand span {
+      color: var(--accent-blue);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      color: var(--accent-blue);
+    }
+
+    .header-area {
+      margin-bottom: 40px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(56, 189, 248, 0.05);
+      color: var(--accent-blue-light);
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 24px;
+    }
+
+    .meta-row strong {
+      color: var(--text-secondary);
+    }
+
+    .visual-header {
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 32px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .visual-header img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .visual-header p {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin: 32px 0 16px;
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style-position: inside;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    li strong {
+      color: var(--text-primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13.5px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-secondary);
+    }
+
+    th {
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    td strong {
+      color: var(--text-primary);
+    }
+
+    .highlight-box {
+      background: rgba(45, 212, 191, 0.04);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 18px;
+      margin: 24px 0;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0;
+      color: var(--text-secondary);
+      font-size: 14.5px;
+    }
+
+    .highlight-box p strong {
+      color: var(--text-primary);
+    }
+
+    .highlight-box p+p {
+      margin-top: 12px;
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 0;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 80px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="wrap-nav">
+      <a href="../index.html" class="nav-brand">pallab<span>.</span>dey</a>
+      <a href="../index.html" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Home
+      </a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <header class="header-area">
+      <span class="tag">AI PIPELINE CASE STUDY</span>
+      <h1>RAG Pipeline AI Chatbot</h1>
+      <div class="meta-row">
+        <span>Orchestration: <strong>n8n (self-hosted)</strong></span>
+        <span>Vector DB: <strong>Pinecone</strong></span>
+        <span>LLM: <strong>Gemini</strong></span>
+      </div>
+    </header>
+
+    <section>
+      <h2>Project Overview</h2>
+      <p>
+        A retrieval-augmented generation system, built entirely in n8n, that watches a Google Drive folder and
+        automatically ingests any new or updated document. The demo persona is Nova, an internal assistant for a
+        fictional company, NovaBridge Technologies, built to answer questions from an employee handbook, internal
+        policies, and an FAQ document — and to say so honestly when the answer isn't in there.
+      </p>
+
+      <div class="highlight-box">
+        <p><strong>Note on Defensibility:</strong> This isn't a custom Python retrieval pipeline — it's built entirely
+          with n8n's visual workflow tools. What I'm highlighting here is the orchestration itself: getting two
+          separate trigger types to behave reliably, keeping ingestion and querying decoupled, and writing an agent
+          prompt that refuses to guess when the knowledge base comes up empty.</p>
+      </div>
+
+      <h2>Ingestion Pipeline</h2>
+      <p>
+        This half of the workflow runs independently of the chat and handles getting documents into the knowledge
+        base. It uses two separate Google Drive trigger nodes watching the same folder — one on file created, one
+        on file updated. Because a single trigger type turned out to miss changes. Once a file change is caught,
+        the document is downloaded, split into 1000-character chunks with no overlap, embedded with Gemini, and
+        stored in a shared Pinecone namespace so the chatbot can pull from either source document without needing
+        to know which one an answer came from.
+      </p>
+
+      <div class="visual-header">
+        <img src="../assets/Ingestion_Pipeline.png"
+          alt="n8n ingestion pipeline: dual Google Drive triggers feeding document chunking and Pinecone embedding">
+        <p>Ingestion half of the workflow — dual Drive triggers to document, chunk, and embed.</p>
+      </div>
+
+      <h2>Query Pipeline</h2>
+      <p>
+        When a message comes in, the AI Agent checks conversation memory for context, then decides whether it
+        needs to look something up. If it does, it calls the Pinecone retrieval tool, searches the shared
+        namespace, and generates a response using only what comes back. The agent runs under a fairly strict
+        system prompt: it has to check the knowledge base before answering anything, it isn't allowed to fall back
+        on general knowledge, and if the retrieved context isn't enough, it says so instead of guessing.
+      </p>
+
+      <div class="visual-header">
+        <img src="../assets/Query_Pipeline.png"
+          alt="n8n query pipeline: AI agent checking memory, calling Pinecone retrieval, and generating a grounded response">
+        <p>Query half of the workflow — memory check, retrieval, grounded response.</p>
+      </div>
+
+      <h2>Proving It Actually Updates Live</h2>
+      <p>
+        The most important thing to demonstrate wasn't that the chatbot could answer questions — it's that the
+        knowledge base stays current without anyone touching the workflow. The repo includes two recorded demos
+        showing this end to end:
+      </p>
+      <ul>
+        <li>A short FAQ and policy document is indexed and queried first, and the agent answers correctly using the
+          retrieved context.</li>
+        <li>A second, longer document is then dropped into the watched folder in a separate session. The trigger fires
+          on its own, the new content gets indexed with no manual steps, and the agent correctly answers a question that
+          only exists in that second document with no mixing or hallucination pulled from the first.</li>
+      </ul>
+
+      <h2>What's Actually Been Tested</h2>
+      <p>
+        Verified end to end with two documents. Not yet tested: a larger document set, multiple people chatting at
+        once, or documents that genuinely contradict each other. Though the system prompt does include instructions
+        for handling that case if it comes up.
+      </p>
+
+      <h2>Known Limitations</h2>
+      <ul>
+        <li>No error handling yet if a file fails to download, parse, or embed.</li>
+        <li>Only tested with two documents. Retrieval quality at a larger scale is unverified.</li>
+        <li>Runs on a local, self-hosted n8n instance, not deployed anywhere persistent or public.</li>
+        <li>Multi part questions can trigger more than one round of retrieval before answering. This is expected
+          agent
+          behavior, but it adds latency and token cost.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Pallab Dey</p>
+  </footer>
+
+</body>
+
+</html>
