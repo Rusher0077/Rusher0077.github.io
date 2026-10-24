@@ -542,6 +542,7 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.3);
       color: inherit;
+      min-height: 640px;
     }
 
     @media (max-width: 1024px) {
@@ -680,7 +681,7 @@
     .project-visual img {
       width: 100%;
       height: 100%;
-      object-fit: fill;
+      object-fit: contain;
       object-position: center;
       transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -725,13 +726,16 @@
       font-size: 20px;
       font-weight: 600;
       color: var(--text-primary);
+      height: 54px;
     }
 
     .project-body p {
       font-size: 14.5px;
       color: var(--text-secondary);
       line-height: 1.6;
-      flex-grow: 1;
+      height: 116px;
+      flex-grow: 0;
+      overflow: hidden;
     }
 
     /* Key metrics bullet section inside card */
@@ -742,6 +746,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      min-height: 74px;
     }
 
     .project-metric-item {
@@ -765,7 +770,7 @@
       font-size: 13.5px;
       font-weight: 600;
       color: var(--accent-blue);
-      margin-top: 8px;
+      margin-top: auto;
       text-decoration: none;
       transition: color 0.2s ease;
     }
@@ -899,6 +904,7 @@
       text-decoration: none;
       color: inherit;
       transition: all 0.25s ease;
+      min-height: 285px;
     }
 
     .cert-card:hover {
@@ -912,6 +918,7 @@
       aspect-ratio: 16/9;
       overflow: hidden;
       background: var(--card-bg-solid);
+      display: block;
     }
 
     .cert-thumb img {
@@ -930,6 +937,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      flex: 1;
     }
 
     .cert-issuer {
@@ -946,6 +954,7 @@
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.35;
+      min-height: 41px;
     }
 
     .cert-verify {
@@ -954,12 +963,35 @@
       gap: 5px;
       font-size: 12px;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: auto;
       transition: color 0.2s;
     }
 
     .cert-card:hover .cert-verify {
       color: var(--accent-cyan);
+    }
+
+    .cert-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0, 0, 0, 0.86);
+      cursor: zoom-out;
+    }
+
+    .cert-lightbox.open {
+      display: flex;
+    }
+
+    .cert-lightbox img {
+      max-width: min(100%, 1100px);
+      max-height: 90vh;
+      object-fit: contain;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
 
     /* CONTACT SECTION */
@@ -1275,6 +1307,39 @@
         </button>
         <div class="project-grid">
 
+          <!-- Project 1: Daraz Market Intelligence Pipeline -->
+          <div class="project-card" id="project-daraz-pipeline">
+            <div class="project-visual">
+              <img src="assets/daraz_pipeline.png" alt="Daraz Market Intelligence Pipeline">
+            </div>
+            <div class="project-body">
+              <div class="project-tags">
+                <span class="project-tag">Python</span>
+                <span class="project-tag">PostgreSQL</span>
+                <span class="project-tag">Power BI</span>
+              </div>
+              <h3>Daraz Market Intelligence Pipeline</h3>
+              <p>End-to-end pipeline for 8,287 Daraz Bangladesh listings, with automated cleaning, category-quality checks, cloud storage, and Power BI market intelligence.</p>
+              <div class="project-metrics">
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                  <span>8,287 listings processed across 15 categories</span>
+                </div>
+                <div class="project-metric-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                  <span>Automated batch loads via GitHub Actions</span>
+                </div>
+              </div>
+              <a href="projects/daraz-pipeline.html" class="project-action">View Case Study
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.2s;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+              <a href="https://github.com/Rusher0077/Daraz-Automated-Price-Market-Intelligence-Pipeline" target="_blank" rel="noopener" class="project-github-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>
+                View on GitHub
+              </a>
+            </div>
+          </div>
+
           <!-- Project 1: Maven Toys -->
           <div class="project-card" id="project-maven-toys">
             <div class="project-visual">
@@ -1574,9 +1639,6 @@
                 <path
                   d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
               </svg>Git &amp; GitHub</span>
-            <span class="skill-badge"><img
-                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" class="skill-icon"
-                alt="">Docker</span>
           </div>
         </div>
 
@@ -1623,79 +1685,75 @@
       <div class="cert-grid">
 
         <!-- DataCamp Data Analyst Associate -->
-        <a class="cert-card" href="https://www.datacamp.com/certificate/DAA0017933960446" target="_blank"
-          rel="noopener">
-          <div class="cert-thumb">
+        <div class="cert-card">
+          <a class="cert-thumb cert-image-link" href="certifications/data_analyst_associate.png" aria-label="Open DataCamp Data Analyst Associate Certificate">
             <img src="certifications/data_analyst_associate.png" alt="DataCamp Data Analyst Associate Certificate">
-          </div>
+          </a>
           <div class="cert-body">
             <span class="cert-issuer">DataCamp</span>
             <h4 class="cert-title">Data Analyst Associate</h4>
-            <span class="cert-verify">Verify Credential
+            <a class="cert-verify" href="https://www.datacamp.com/certificate/DAA0017933960446" target="_blank" rel="noopener">Verify Credential
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
-            </span>
+            </a>
           </div>
-        </a>
+        </div>
 
         <!-- DataCamp Data Analyst in Databricks -->
-        <a class="cert-card"
-          href="https://www.datacamp.com/completed/statement-of-accomplishment/track/5ead819e7f0a7e63e029301e3f551ac092b3868b"
-          target="_blank" rel="noopener">
-          <div class="cert-thumb">
+        <div class="cert-card">
+          <a class="cert-thumb cert-image-link" href="certifications/data_analyst_in_databricks.jfif" aria-label="Open DataCamp Data Analyst in Databricks Certificate">
             <img src="certifications/data_analyst_in_databricks.jfif"
               alt="DataCamp Data Analyst in Databricks Certificate">
-          </div>
+          </a>
           <div class="cert-body">
             <span class="cert-issuer">DataCamp</span>
             <h4 class="cert-title">Data Analyst in Databricks</h4>
-            <span class="cert-verify">Verify Credential
+            <a class="cert-verify" href="https://www.datacamp.com/completed/statement-of-accomplishment/track/5ead819e7f0a7e63e029301e3f551ac092b3868b" target="_blank" rel="noopener">Verify Credential
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
-            </span>
+            </a>
           </div>
-        </a>
+        </div>
 
         <!-- Python Programming and Basic Data Science -->
-        <a class="cert-card" href="https://training.edge.gov.bd/certificate-validation" target="_blank" rel="noopener">
-          <div class="cert-thumb">
+        <div class="cert-card">
+          <a class="cert-thumb cert-image-link" href="certifications/Python Programming and Basic Data Science.jfif" aria-label="Open Python Programming and Basic Data Science Certificate">
             <img src="certifications/Python Programming and Basic Data Science.jfif"
               alt="Python Programming and Basic Data Science Certificate">
-          </div>
+          </a>
           <div class="cert-body">
             <span class="cert-issuer">Government of Bangladesh</span>
             <h4 class="cert-title">Python Programming &amp; Basic Data Science</h4>
-            <span class="cert-verify">Verify Credential
+            <a class="cert-verify" href="https://training.edge.gov.bd/certificate-validation" target="_blank" rel="noopener">Verify Credential
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
-            </span>
+            </a>
           </div>
-        </a>
+        </div>
 
         <!-- Supervised Machine Learning: Regression and Classification -->
-        <a class="cert-card" href="https://www.coursera.org/account/accomplishments/verify/4C5EZYK9WSXJ" target="_blank"
-          rel="noopener">
-          <div class="cert-thumb">
+        <div class="cert-card">
+          <a class="cert-thumb cert-image-link" href="certifications/Supervised Machine Learning - Regression and Classification.jfif" aria-label="Open Supervised Machine Learning Certificate">
             <img src="certifications/Supervised Machine Learning - Regression and Classification.jfif"
               alt="Supervised Machine Learning Certificate">
-          </div>
+          </a>
           <div class="cert-body">
             <span class="cert-issuer">Coursera / Stanford</span>
             <h4 class="cert-title">Supervised Machine Learning: Regression &amp; Classification</h4>
-            <span class="cert-verify">Verify Credential
+            <a class="cert-verify" href="https://www.coursera.org/account/accomplishments/verify/4C5EZYK9WSXJ" target="_blank" rel="noopener">Verify Credential
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
-            </span>
+            </a>
           </div>
-        </a>
+        </div>
 
       </div>
     </div>
@@ -1870,6 +1928,28 @@
       }
     });
   </script>
+  <div class="cert-lightbox" id="cert-lightbox" role="dialog" aria-label="Certificate preview">
+    <img id="cert-lightbox-image" src="" alt="Certificate preview">
+  </div>
+
+  <script>
+    const certLightbox = document.getElementById('cert-lightbox');
+    const certLightboxImage = document.getElementById('cert-lightbox-image');
+
+    document.querySelectorAll('.cert-image-link').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        certLightboxImage.src = link.getAttribute('href');
+        certLightbox.classList.add('open');
+      });
+    });
+
+    certLightbox.addEventListener('click', () => {
+      certLightbox.classList.remove('open');
+      certLightboxImage.src = '';
+    });
+  </script>
+
 </body>
 
 </html>
